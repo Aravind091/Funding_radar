@@ -128,6 +128,8 @@ def scan_bdns(keywords, errors):
 
 def scan_eu(keywords, errors):
     results = []
+    today = datetime.now(timezone.utc).date()
+
     for kw in keywords:
         try:
             resp = requests.post(
@@ -155,7 +157,32 @@ def scan_eu(keywords, errors):
                 status = str(meta.get("status", meta.get("statusDescription", ""))).lower()
                 if status and "closed" in status:
                     continue  # skip calls we know are already closed
+
                 title = " ".join(meta.get("title", [meta.get("title", "")])) if isinstance(meta.get("title"), list) else str(meta.get("title", ""))
+                title = title.strip()
+
+                # The EU search API ranks results by its own relevance scoring, which
+                # is loose enough to surface unrelated hits (e.g. a "tank" keyword
+                # pulling in "anti-tank capabilities" or "Think Tanks"). Only keep a
+                # result if the keyword genuinely appears in the title - same standard
+                # BDNS is held to.
+                if not text_matches(title, [kw]):
+                    continue
+
+                # Best-effort recency filter: if a deadline is present and clearly in
+                # the past, skip it. Historical/archived topics often don't carry
+                # "closed" in their status text, so this catches what that check misses.
+                deadline_raw = meta.get("deadlineDate", "")
+                if isinstance(deadline_raw, list):
+                    deadline_raw = deadline_raw[0] if deadline_raw else ""
+                if deadline_raw:
+                    try:
+                        deadline = datetime.fromisoformat(str(deadline_raw).replace("Z", "+00:00")).date()
+                        if deadline < today:
+                            continue
+                    except ValueError:
+                        pass  # unparsable date - don't let that block a real match
+
                 topic_id = meta.get("identifier", item.get("reference", item.get("id", "")))
                 if isinstance(topic_id, list):
                     topic_id = topic_id[0] if topic_id else ""
@@ -173,13 +200,16 @@ def scan_eu(keywords, errors):
         except (KeyError, ValueError, TypeError) as e:
             errors.append(f"EU response format unexpected for keyword '{kw}': {e}")
 
-    # de-dupe (same topic can match multiple keywords)
+    # de-dupe: the EU portal republishes the same call once per language, so the
+    # same underlying topic shows up under many different topic_ids. Group by the
+    # normalized title instead of id - that's the actual signal of "same call".
     dedup = {}
     for r in results:
-        if r["id"] in dedup:
-            dedup[r["id"]]["matched_keywords"] = list(set(dedup[r["id"]]["matched_keywords"] + r["matched_keywords"]))
+        key = r["title"].lower() or r["id"]
+        if key in dedup:
+            dedup[key]["matched_keywords"] = sorted(set(dedup[key]["matched_keywords"] + r["matched_keywords"]))
         else:
-            dedup[r["id"]] = r
+            dedup[key] = r
     return list(dedup.values())
 
 
