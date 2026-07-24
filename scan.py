@@ -38,7 +38,11 @@ from datetime import datetime, timezone
 import requests
 
 ROOT = Path(__file__).parent
-DATA_DIR = ROOT / "data"
+# Data lives inside docs/ (not at the repo root) because GitHub Pages only
+# publishes the /docs folder - if the data files were outside it, the
+# dashboard's fetch() calls would silently 404 even though the files exist
+# in the repo.
+DATA_DIR = ROOT / "docs" / "data"
 SEEN_FILE = DATA_DIR / "seen.json"
 MATCHES_FILE = DATA_DIR / "matches.json"
 KEYWORDS_FILE = ROOT / "keywords.json"
