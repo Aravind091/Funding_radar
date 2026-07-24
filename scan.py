@@ -33,7 +33,7 @@ import sys
 import smtplib
 from email.mime.text import MIMEText
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import requests
 
@@ -221,6 +221,10 @@ def scan_eu(keywords, errors):
                 deadline_raw = meta.get("deadlineDate", "")
                 if isinstance(deadline_raw, list):
                     deadline_raw = deadline_raw[0] if deadline_raw else ""
+                start_raw = meta.get("startDate", "")
+                if isinstance(start_raw, list):
+                    start_raw = start_raw[0] if start_raw else ""
+
                 if deadline_raw:
                     try:
                         deadline = datetime.fromisoformat(str(deadline_raw).replace("Z", "+00:00")).date()
@@ -228,6 +232,18 @@ def scan_eu(keywords, errors):
                             continue
                     except ValueError:
                         pass  # unparsable date - don't let that block a real match
+                elif start_raw:
+                    # No deadline field at all is itself a signal: older/archived
+                    # topics (pre-2021 FCH JU etc.) often only carry a startDate in
+                    # the search index. Give a generous grace window in case it's a
+                    # genuinely long-running call, but a startDate more than ~18
+                    # months old with no deadline info is almost certainly closed.
+                    try:
+                        start = datetime.fromisoformat(str(start_raw).replace("Z", "+00:00")).date()
+                        if start < today - timedelta(days=548):
+                            continue
+                    except ValueError:
+                        pass
 
                 topic_id = meta.get("identifier", item.get("reference", item.get("id", "")))
                 if isinstance(topic_id, list):
@@ -237,7 +253,7 @@ def scan_eu(keywords, errors):
                     "id": f"eu-{topic_id}",
                     "title": title,
                     "organism": meta.get("programme", meta.get("frameworkProgramme", "EU")),
-                    "date": meta.get("deadlineDate", meta.get("startDate", "")),
+                    "date": deadline_raw or start_raw,
                     "deadline": deadline_raw or "",
                     "matched_keywords": [kw],
                     "url": f"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/{topic_id}".lower(),
