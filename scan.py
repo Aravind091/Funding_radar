@@ -46,9 +46,20 @@ KEYWORDS_FILE = ROOT / "keywords.json"
 BDNS_SEARCH_URL = "https://www.infosubvenciones.es/bdnstrans/api/convocatorias/busqueda"
 EU_SEARCH_URL = "https://api.tech.ec.europa.eu/search-api/prod/rest/search"
 
-REQUEST_TIMEOUT = 30
+BDNS_DETAIL_URL = "https://www.infosubvenciones.es/bdnstrans/api/convocatorias"
+
+# (connect timeout, read timeout) in seconds. A plain single number only caps
+# connection time in some edge cases - a stalled response after connecting
+# could hang far longer. This is a hard belt-and-suspenders cap so a single
+# bad request can never stall the whole workflow (which also has its own
+# job-level timeout-minutes cap in scan.yml as a second line of defense).
+REQUEST_TIMEOUT = (10, 20)
 BDNS_PAGES_TO_SCAN = 6  # 6 pages x 50 = most recent 300 convocatorias published across Spain
 BDNS_PAGE_SIZE = 50
+# Candidate field names for a BDNS convocatoria's actual application deadline.
+# The detail endpoint isn't formally documented, so we try each in order and
+# use whichever is present - if none are, we simply don't show a deadline.
+BDNS_DEADLINE_FIELDS = ("plazoPresentacionSolicitudes", "fechaFinSolicitud", "fechaFin", "plazo")
 
 
 def load_keywords():
@@ -72,6 +83,35 @@ def save_json(path, obj):
 def text_matches(text, keywords):
     text_l = (text or "").lower()
     return [kw for kw in keywords if kw in text_l]
+
+
+def fetch_bdns_deadline(conv_id, vpd, errors):
+    """Best-effort fetch of a BDNS call's actual application deadline.
+
+    The search endpoint only returns a publication date. The full deadline
+    lives on the per-convocatoria detail endpoint, which isn't documented,
+    so this tries a few known candidate field names and gives up quietly
+    (returns None) if none are present - a missing deadline just means the
+    dashboard falls back to showing the publication date instead.
+    """
+    try:
+        resp = requests.get(
+            BDNS_DETAIL_URL,
+            params={"numConv": conv_id, "vpd": vpd},
+            timeout=REQUEST_TIMEOUT,
+            headers={"Accept": "application/json"},
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        for field in BDNS_DEADLINE_FIELDS:
+            val = data.get(field)
+            if val:
+                return val
+    except requests.RequestException as e:
+        errors.append(f"BDNS deadline lookup failed for {conv_id}: {e}")
+    except (ValueError, AttributeError):
+        pass  # unparsable response - just skip the deadline for this one
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -104,6 +144,7 @@ def scan_bdns(keywords, errors):
                 matched = text_matches(title, keywords)
                 if matched:
                     conv_id = item.get("numeroConvocatoria") or item.get("id")
+                    vpd = item.get("vpd", "GE")
                     results.append({
                         "source": "BDNS (Spain)",
                         "id": f"bdns-{conv_id}",
@@ -112,6 +153,7 @@ def scan_bdns(keywords, errors):
                             item.get("nivel1"), item.get("nivel2"), item.get("nivel3")
                         ])),
                         "date": item.get("fechaRecepcion"),
+                        "deadline": fetch_bdns_deadline(conv_id, vpd, errors),
                         "matched_keywords": matched,
                         "url": f"https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/{conv_id}",
                     })
@@ -192,6 +234,7 @@ def scan_eu(keywords, errors):
                     "title": title,
                     "organism": meta.get("programme", meta.get("frameworkProgramme", "EU")),
                     "date": meta.get("deadlineDate", meta.get("startDate", "")),
+                    "deadline": deadline_raw or "",
                     "matched_keywords": [kw],
                     "url": f"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/{topic_id}".lower(),
                 })
@@ -228,19 +271,21 @@ def send_email(new_items, errors):
         # Email is optional - dashboard-only mode. Not an error, just skip.
         return
 
-    lines = [f"Funding Radar found {len(new_items)} new call(s):\n"]
+    dashboard_url = os.environ.get("DASHBOARD_URL", "")
+
+    lines = [f"Funding Radar: {len(new_items)} new call(s) found this week.\n"]
     for it in new_items:
-        lines.append(f"- [{it['source']}] {it['title']}")
-        lines.append(f"  {it['organism']}")
-        lines.append(f"  Matched: {', '.join(it['matched_keywords'])}")
-        lines.append(f"  {it['url']}\n")
+        deadline = f" - deadline {it['deadline']}" if it.get("deadline") else ""
+        lines.append(f"- [{it['source']}] {it['title']}{deadline}")
+        lines.append(f"  {it['url']}")
+    if dashboard_url:
+        lines.append(f"\nFull list: {dashboard_url}")
     if errors:
-        lines.append("\n--- Warnings from this run ---")
-        lines.extend(errors)
+        lines.append(f"\n({len(errors)} warning(s) this run - check the dashboard for details)")
     body = "\n".join(lines)
 
     msg = MIMEText(body, "plain", "utf-8")
-    msg["Subject"] = f"Funding Radar: {len(new_items)} new call(s)"
+    msg["Subject"] = f"Funding Radar: {len(new_items)} new call(s) this week"
     msg["From"] = user
     msg["To"] = to
 
