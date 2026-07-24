@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Funding Radar</title>
+<style>
+  :root{
+    --bg:#0b1420;
+    --panel:#101d2c;
+    --panel-2:#0d1826;
+    --line:#1f3348;
+    --text:#dce8f2;
+    --muted:#7c94ab;
+    --accent:#4fd1c5;
+    --accent-dim:#245954;
+    --warn:#e8a23d;
+    --eu:#7aa2ff;
+    --es:#f2a65a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% -10%, #132638 0%, transparent 45%),
+      var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+    font-size:14px;
+    line-height:1.5;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  header{
+    padding:32px 24px 20px;
+    max-width:980px;
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .sweep{
+    width:44px;height:44px;flex:none;position:relative;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:
+      conic-gradient(from 0deg, rgba(79,209,197,0.55), transparent 70deg);
+    animation:spin 4s linear infinite;
+  }
+  .sweep::after{
+    content:"";position:absolute;inset:14px;border-radius:50%;
+    background:var(--panel);border:1px solid var(--line);
+  }
+  @media (prefers-reduced-motion: reduce){ .sweep{animation:none;} }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+
+  h1{
+    font-family:inherit;
+    font-size:20px;
+    letter-spacing:0.06em;
+    margin:0;
+    text-transform:uppercase;
+    color:var(--text);
+  }
+  h1 span{color:var(--accent);}
+  .tag{color:var(--muted);font-size:12px;margin-top:4px;}
+
+  main{max-width:980px;margin:0 auto;padding:0 24px 80px;}
+
+  .statline{
+    display:flex;flex-wrap:wrap;gap:12px;
+    margin:8px 0 28px;
+  }
+  .stat{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:6px;
+    padding:10px 16px;
+    min-width:140px;
+  }
+  .stat .n{font-size:22px;color:var(--accent);display:block;}
+  .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+
+  .toolbar{
+    display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    margin-bottom:18px;
+  }
+  .toolbar button{
+    font-family:inherit;font-size:12px;
+    background:var(--panel);color:var(--muted);
+    border:1px solid var(--line);border-radius:20px;
+    padding:6px 14px;cursor:pointer;
+    text-transform:uppercase;letter-spacing:0.04em;
+  }
+  .toolbar button.active{
+    color:var(--bg);background:var(--accent);border-color:var(--accent);
+  }
+  .toolbar input{
+    font-family:inherit;font-size:13px;
+    background:var(--panel-2);color:var(--text);
+    border:1px solid var(--line);border-radius:6px;
+    padding:7px 12px;flex:1;min-width:180px;
+  }
+
+  .card{
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:8px;
+    padding:16px 18px;
+    margin-bottom:12px;
+    position:relative;
+    border-left:3px solid var(--line);
+  }
+  .card.eu{border-left-color:var(--eu);}
+  .card.es{border-left-color:var(--es);}
+  .card .top{
+    display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+    margin-bottom:6px;
+  }
+  .card .source{
+    font-size:11px;text-transform:uppercase;letter-spacing:0.06em;
+  }
+  .card.eu .source{color:var(--eu);}
+  .card.es .source{color:var(--es);}
+  .card .date{color:var(--muted);font-size:12px;white-space:nowrap;}
+  .card .title{
+    font-size:14.5px;color:var(--text);margin:4px 0 8px;
+  }
+  .card .organism{color:var(--muted);font-size:12px;margin-bottom:8px;}
+  .kw{
+    display:inline-block;
+    font-size:10.5px;color:var(--accent);
+    border:1px solid var(--accent-dim);
+    border-radius:10px;padding:2px 9px;margin:0 6px 4px 0;
+  }
+
+  .empty{
+    color:var(--muted);
+    border:1px dashed var(--line);
+    border-radius:8px;
+    padding:40px 20px;
+    text-align:center;
+  }
+
+  .runlog{
+    margin-top:48px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+  }
+  .runlog h2{
+    font-size:13px;text-transform:uppercase;letter-spacing:0.06em;
+    color:var(--muted);margin-bottom:12px;
+  }
+  .run{
+    display:grid;
+    grid-template-columns:170px 70px 90px 1fr;
+    gap:10px;
+    font-size:12px;
+    padding:6px 0;
+    border-bottom:1px solid var(--line);
+    color:var(--muted);
+  }
+  .run .new{color:var(--accent);}
+  .run .warn{color:var(--warn);}
+
+  footer{
+    max-width:980px;margin:40px auto 0;padding:0 24px 40px;
+    color:var(--muted);font-size:11px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="sweep"></div>
+  <div>
+    <h1>Funding <span>Radar</span></h1>
+    <div class="tag">BDNS (Spain) + EU Funding &amp; Tenders — scanned daily against your keywords</div>
+  </div>
+</header>
+
+<main>
+  <div class="statline" id="statline"></div>
+
+  <div class="toolbar">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="EU Funding & Tenders">EU</button>
+    <button data-filter="BDNS (Spain)">Spain</button>
+    <input id="search" placeholder="filter by title or keyword…">
+  </div>
+
+  <div id="matches"></div>
+
+  <div class="runlog">
+    <h2>Scan history</h2>
+    <div id="runlog"></div>
+  </div>
+</main>
+
+<footer>
+  Reads data/matches.json and data/run_log.json, written by scan.py on each scheduled run. Nothing here submits anything — it only reads public data.
+</footer>
+
+<script>
+async function loadJSON(path){
+  try{
+    const res = await fetch(path + '?_=' + Date.now());
+    if(!res.ok) return [];
+    return await res.json();
+  }catch(e){ return []; }
+}
+
+function sourceClass(source){
+  if(source.includes('EU')) return 'eu';
+  return 'es';
+}
+
+function fmtDate(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  if(isNaN(dt)) return d;
+  return dt.toISOString().slice(0,10);
+}
+
+function render(matches, filter, query){
+  const container = document.getElementById('matches');
+  const q = query.trim().toLowerCase();
+  const filtered = matches.filter(m=>{
+    const passFilter = filter === 'all' || m.source === filter;
+    const hay = (m.title + ' ' + (m.matched_keywords||[]).join(' ')).toLowerCase();
+    const passQuery = !q || hay.includes(q);
+    return passFilter && passQuery;
+  });
+
+  if(filtered.length === 0){
+    container.innerHTML = '<div class="empty">No calls match yet. Once the scheduled scan runs, matching calls will appear here.</div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map(m => `
+    <div class="card ${sourceClass(m.source)}">
+      <div class="top">
+        <span class="source">${m.source}</span>
+        <span class="date">${fmtDate(m.date)}</span>
+      </div>
+      <div class="title"><a href="${m.url}" target="_blank" rel="noopener">${m.title || '(untitled call)'}</a></div>
+      <div class="organism">${m.organism || ''}</div>
+      <div class="kws">${(m.matched_keywords||[]).map(k => `<span class="kw">${k}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+function renderStats(matches, runLog){
+  const last = runLog[0];
+  const stats = [
+    {n: matches.length, l: 'Total matches'},
+    {n: last ? last.new_matches : '—', l: 'New (last run)'},
+    {n: last ? fmtDate(last.timestamp) : '—', l: 'Last scan'},
+    {n: last && last.errors ? last.errors.length : 0, l: 'Warnings'},
+  ];
+  document.getElementById('statline').innerHTML = stats.map(s =>
+    `<div class="stat"><span class="n">${s.n}</span><span class="l">${s.l}</span></div>`
+  ).join('');
+}
+
+function renderRunLog(runLog){
+  const el = document.getElementById('runlog');
+  if(runLog.length === 0){
+    el.innerHTML = '<div class="empty">No scans have run yet.</div>';
+    return;
+  }
+  el.innerHTML = runLog.slice(0,15).map(r => `
+    <div class="run">
+      <span>${new Date(r.timestamp).toISOString().replace('T',' ').slice(0,16)} UTC</span>
+      <span class="new">+${r.new_matches}</span>
+      <span>${r.total_scanned} scanned</span>
+      <span class="${r.errors && r.errors.length ? 'warn' : ''}">${r.errors && r.errors.length ? r.errors.join(' · ') : 'ok'}</span>
+    </div>
+  `).join('');
+}
+
+(async function init(){
+  const [matches, runLog] = await Promise.all([
+    loadJSON('data/matches.json'),
+    loadJSON('data/run_log.json'),
+  ]);
+
+  let filter = 'all';
+  let query = '';
+
+  renderStats(matches, runLog);
+  renderRunLog(runLog);
+  render(matches, filter, query);
+
+  document.querySelectorAll('.toolbar button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.toolbar button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      filter = btn.dataset.filter;
+      render(matches, filter, query);
+    });
+  });
+
+  document.getElementById('search').addEventListener('input', (e)=>{
+    query = e.target.value;
+    render(matches, filter, query);
+  });
+})();
+</script>
+
+</body>
+</html>

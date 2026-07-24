@@ -1,0 +1,24 @@
+{
+  "_comment": "Edit this list freely. Matching is case-insensitive and looks for these as substrings in call titles/descriptions. Keep phrases specific enough to avoid noise (e.g. 'hydrogen' alone will match a lot of unrelated chemistry calls).",
+  "keywords": [
+    "liquid hydrogen",
+    "LH2",
+    "hydrogen storage",
+    "hydrogen tank",
+    "composite material",
+    "CFRP",
+    "carbon fibre",
+    "carbon fiber",
+    "cryogenic",
+    "fracture mechanics",
+    "fracture toughness",
+    "delamination",
+    "pressure vessel",
+    "Type V tank",
+    "linerless tank",
+    "translaminar",
+    "interlaminar",
+    "aviation propulsion",
+    "clean aviation"
+  ]
+}
