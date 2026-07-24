@@ -242,7 +242,7 @@ function render(matches, filter, query){
     <div class="card ${sourceClass(m.source)}">
       <div class="top">
         <span class="source">${m.source}</span>
-        <span class="date">${fmtDate(m.date)}</span>
+        <span class="date">${m.deadline ? 'Deadline: ' + fmtDate(m.deadline) : fmtDate(m.date)}</span>
       </div>
       <div class="title"><a href="${m.url}" target="_blank" rel="noopener">${m.title || '(untitled call)'}</a></div>
       <div class="organism">${m.organism || ''}</div>
