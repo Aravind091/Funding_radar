@@ -64,6 +64,7 @@ BDNS_PAGE_SIZE = 50
 # The detail endpoint isn't formally documented, so we try each in order and
 # use whichever is present - if none are, we simply don't show a deadline.
 BDNS_DEADLINE_FIELDS = ("plazoPresentacionSolicitudes", "fechaFinSolicitud", "fechaFin", "plazo")
+BDNS_OPEN_FIELDS = ("fechaInicioSolicitud", "fechaInicio")
 
 
 def load_keywords():
@@ -93,10 +94,11 @@ def fetch_bdns_deadline(conv_id, vpd, errors):
     """Best-effort fetch of a BDNS call's actual application deadline.
 
     The search endpoint only returns a publication date. The full deadline
-    lives on the per-convocatoria detail endpoint, which isn't documented,
-    so this tries a few known candidate field names and gives up quietly
-    (returns None) if none are present - a missing deadline just means the
-    dashboard falls back to showing the publication date instead.
+    (and opening date) live on the per-convocatoria detail endpoint, which
+    isn't documented, so this tries a few known candidate field names and
+    gives up quietly (returns (None, None)) if none are present - a missing
+    value just means the dashboard falls back to showing the publication
+    date instead, with no status label.
     """
     try:
         resp = requests.get(
@@ -107,15 +109,42 @@ def fetch_bdns_deadline(conv_id, vpd, errors):
         )
         resp.raise_for_status()
         data = resp.json()
-        for field in BDNS_DEADLINE_FIELDS:
-            val = data.get(field)
-            if val:
-                return val
+        deadline = next((data.get(f) for f in BDNS_DEADLINE_FIELDS if data.get(f)), None)
+        opens = next((data.get(f) for f in BDNS_OPEN_FIELDS if data.get(f)), None)
+        return opens, deadline
     except requests.RequestException as e:
         errors.append(f"BDNS deadline lookup failed for {conv_id}: {e}")
     except (ValueError, AttributeError):
-        pass  # unparsable response - just skip the deadline for this one
-    return None
+        pass  # unparsable response - just skip this one
+    return None, None
+
+
+def compute_status(opens_raw, deadline_raw, today):
+    """Turn raw opening/deadline date strings into a status label the
+    dashboard can show directly, e.g. "Opens 2026-09-01" or "Open until
+    2026-10-15". Returns (status_label, is_closed). Any date that fails to
+    parse is treated as unknown rather than guessed at.
+    """
+    def parse(raw):
+        if isinstance(raw, list):
+            raw = raw[0] if raw else None
+        if not raw:
+            return None
+        try:
+            return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).date()
+        except ValueError:
+            return None
+
+    opens = parse(opens_raw)
+    deadline = parse(deadline_raw)
+
+    if deadline and deadline < today:
+        return None, True  # closed - caller should drop this result
+    if opens and opens > today:
+        return f"Opens {opens.isoformat()}", False
+    if deadline:
+        return f"Open until {deadline.isoformat()}", False
+    return None, False
 
 
 # ---------------------------------------------------------------------------
@@ -124,6 +153,7 @@ def fetch_bdns_deadline(conv_id, vpd, errors):
 
 def scan_bdns(keywords, errors):
     results = []
+    today = datetime.now(timezone.utc).date()
     try:
         for page in range(BDNS_PAGES_TO_SCAN):
             resp = requests.get(
@@ -149,6 +179,10 @@ def scan_bdns(keywords, errors):
                 if matched:
                     conv_id = item.get("numeroConvocatoria") or item.get("id")
                     vpd = item.get("vpd", "GE")
+                    opens_raw, deadline_raw = fetch_bdns_deadline(conv_id, vpd, errors)
+                    status, is_closed = compute_status(opens_raw, deadline_raw, today)
+                    if is_closed:
+                        continue
                     results.append({
                         "source": "BDNS (Spain)",
                         "id": f"bdns-{conv_id}",
@@ -157,7 +191,8 @@ def scan_bdns(keywords, errors):
                             item.get("nivel1"), item.get("nivel2"), item.get("nivel3")
                         ])),
                         "date": item.get("fechaRecepcion"),
-                        "deadline": fetch_bdns_deadline(conv_id, vpd, errors),
+                        "deadline": deadline_raw or "",
+                        "status": status,
                         "matched_keywords": matched,
                         "url": f"https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/{conv_id}",
                     })
@@ -200,8 +235,8 @@ def scan_eu(keywords, errors):
             hits = payload.get("results") or payload.get("result") or []
             for item in hits:
                 meta = item.get("metadata", item)
-                status = str(meta.get("status", meta.get("statusDescription", ""))).lower()
-                if status and "closed" in status:
+                status_text = str(meta.get("status", meta.get("statusDescription", ""))).lower()
+                if status_text and "closed" in status_text:
                     continue  # skip calls we know are already closed
 
                 title = " ".join(meta.get("title", [meta.get("title", "")])) if isinstance(meta.get("title"), list) else str(meta.get("title", ""))
@@ -248,6 +283,7 @@ def scan_eu(keywords, errors):
                 topic_id = meta.get("identifier", item.get("reference", item.get("id", "")))
                 if isinstance(topic_id, list):
                     topic_id = topic_id[0] if topic_id else ""
+                call_status, _ = compute_status(start_raw, deadline_raw, today)
                 results.append({
                     "source": "EU Funding & Tenders",
                     "id": f"eu-{topic_id}",
@@ -255,6 +291,7 @@ def scan_eu(keywords, errors):
                     "organism": meta.get("programme", meta.get("frameworkProgramme", "EU")),
                     "date": deadline_raw or start_raw,
                     "deadline": deadline_raw or "",
+                    "status": call_status,
                     "matched_keywords": [kw],
                     "url": f"https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/{topic_id}".lower(),
                 })
@@ -295,8 +332,8 @@ def send_email(new_items, errors):
 
     lines = [f"Funding Radar: {len(new_items)} new call(s) found this week.\n"]
     for it in new_items:
-        deadline = f" - deadline {it['deadline']}" if it.get("deadline") else ""
-        lines.append(f"- [{it['source']}] {it['title']}{deadline}")
+        detail = f" - {it['status']}" if it.get("status") else (f" - deadline {it['deadline']}" if it.get("deadline") else "")
+        lines.append(f"- [{it['source']}] {it['title']}{detail}")
         lines.append(f"  {it['url']}")
     if dashboard_url:
         lines.append(f"\nFull list: {dashboard_url}")
