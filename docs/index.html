@@ -102,6 +102,19 @@
     border:1px solid var(--line);border-radius:6px;
     padding:7px 12px;flex:1;min-width:180px;
   }
+  .run-link{
+    font-family:inherit;font-size:12px;
+    color:var(--bg);background:var(--accent);
+    border:1px solid var(--accent);border-radius:20px;
+    padding:6px 14px;cursor:pointer;
+    text-transform:uppercase;letter-spacing:0.04em;
+    text-decoration:none;white-space:nowrap;
+  }
+  .run-link:hover{opacity:0.85;text-decoration:none;}
+  .run-hint{
+    color:var(--muted);font-size:11px;
+    margin:-10px 0 18px;
+  }
 
   .card{
     border:1px solid var(--line);
@@ -188,7 +201,9 @@
     <button data-filter="EU Funding & Tenders">EU</button>
     <button data-filter="BDNS (Spain)">Spain</button>
     <input id="search" placeholder="filter by title or keyword…">
+    <a class="run-link" href="https://github.com/Aravind091/Funding_radar/actions/workflows/scan.yml" target="_blank" rel="noopener">▶ Run scan now</a>
   </div>
+  <div class="run-hint">Opens GitHub's Actions page - click the "Run workflow" dropdown there to trigger a scan on demand.</div>
 
   <div id="matches"></div>
 
@@ -242,7 +257,7 @@ function render(matches, filter, query){
     <div class="card ${sourceClass(m.source)}">
       <div class="top">
         <span class="source">${m.source}</span>
-        <span class="date">${m.deadline ? 'Deadline: ' + fmtDate(m.deadline) : fmtDate(m.date)}</span>
+        <span class="date">${m.status ? m.status : (m.deadline ? 'Deadline: ' + fmtDate(m.deadline) : fmtDate(m.date))}</span>
       </div>
       <div class="title"><a href="${m.url}" target="_blank" rel="noopener">${m.title || '(untitled call)'}</a></div>
       <div class="organism">${m.organism || ''}</div>
