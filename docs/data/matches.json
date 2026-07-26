@@ -1,1 +1,61 @@
-[]
+[
+  {
+    "source": "BDNS (Spain)",
+    "id": "bdns-912126",
+    "title": "Subvenció directa 1T 2026 Bàscara reparació d`infraestructures municipals",
+    "organism": "LOCAL / DIPUTACIÓN PROV. DE GIRONA / DIPUTACIÓN PROVINCIAL DE GIRONA",
+    "date": "2026-06-11",
+    "deadline": "2027-05-31",
+    "status": "Open until 2027-05-31",
+    "kind": "topic",
+    "matched_keywords": [
+      "structures"
+    ],
+    "url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/912126",
+    "found_at": "2026-07-26T06:18:52.059101+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-HORIZON-JU-CLEAN-AVIATION-2026-04-FTA-07",
+    "title": "Innovative light weight and reliable liquid hydrogen tank",
+    "organism": [
+      "43108390"
+    ],
+    "date": "2026-05-12T10:42:58.976+0000",
+    "deadline": "",
+    "status": null,
+    "matched_keywords": [
+      "hydrogen tank"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-ju-clean-aviation-2026-04-fta-07",
+    "found_at": "2026-07-26T06:18:52.059101+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-31045243900014",
+    "title": "Fracture mechanics testing of irradiated RPV steels by means of sub-sized specimens (FRACTESUS)",
+    "organism": "EU",
+    "date": "",
+    "deadline": "",
+    "status": null,
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/31045243900014",
+    "found_at": "2026-07-26T06:18:52.059101+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568sl",
+    "title": "Advanced Quantized FRActure MEchanics models of ice and snow for GLObal Warming risk mitigation",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568sl",
+    "found_at": "2026-07-26T06:18:52.059101+00:00"
+  }
+]
