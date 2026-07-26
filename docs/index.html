@@ -127,6 +127,13 @@
   }
   .card.eu{border-left-color:var(--eu);}
   .card.es{border-left-color:var(--es);}
+  .card.standing{border-left-color:var(--warn);border-left-width:4px;}
+  .standing-badge{
+    display:inline-block;
+    font-size:10px;letter-spacing:0.05em;text-transform:uppercase;
+    color:var(--warn);border:1px solid var(--warn);border-radius:10px;
+    padding:2px 9px;margin-bottom:8px;
+  }
   .card .top{
     display:flex;justify-content:space-between;gap:12px;align-items:baseline;
     margin-bottom:6px;
@@ -246,7 +253,7 @@ function render(matches, filter, query){
     const hay = (m.title + ' ' + (m.matched_keywords||[]).join(' ')).toLowerCase();
     const passQuery = !q || hay.includes(q);
     return passFilter && passQuery;
-  });
+  }).sort((a, b) => (a.kind === 'standing' ? 0 : 1) - (b.kind === 'standing' ? 0 : 1));
 
   if(filtered.length === 0){
     container.innerHTML = '<div class="empty">No calls match yet. Once the scheduled scan runs, matching calls will appear here.</div>';
@@ -254,7 +261,8 @@ function render(matches, filter, query){
   }
 
   container.innerHTML = filtered.map(m => `
-    <div class="card ${sourceClass(m.source)}">
+    <div class="card ${sourceClass(m.source)}${m.kind === 'standing' ? ' standing' : ''}">
+      ${m.kind === 'standing' ? '<span class="standing-badge">STANDING CALL - open to any field</span>' : ''}
       <div class="top">
         <span class="source">${m.source}</span>
         <span class="date">${m.status ? m.status : (m.deadline ? 'Deadline: ' + fmtDate(m.deadline) : fmtDate(m.date))}</span>
