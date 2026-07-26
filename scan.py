@@ -72,6 +72,11 @@ def load_keywords():
     return [k.lower() for k in data["keywords"]]
 
 
+def load_standing_calls():
+    data = json.loads(KEYWORDS_FILE.read_text(encoding="utf-8"))
+    return [k.lower() for k in data.get("standing_calls", [])]
+
+
 def load_json(path, default):
     if path.exists():
         try:
@@ -151,7 +156,7 @@ def compute_status(opens_raw, deadline_raw, today):
 # Source 1: BDNS (Spain, all administrations)
 # ---------------------------------------------------------------------------
 
-def scan_bdns(keywords, errors):
+def scan_bdns(keywords, standing_terms, errors):
     results = []
     today = datetime.now(timezone.utc).date()
     try:
@@ -176,7 +181,8 @@ def scan_bdns(keywords, errors):
             for item in content:
                 title = item.get("descripcion", "")
                 matched = text_matches(title, keywords)
-                if matched:
+                standing_matched = text_matches(title, standing_terms)
+                if matched or standing_matched:
                     conv_id = item.get("numeroConvocatoria") or item.get("id")
                     vpd = item.get("vpd", "GE")
                     opens_raw, deadline_raw = fetch_bdns_deadline(conv_id, vpd, errors)
@@ -193,7 +199,11 @@ def scan_bdns(keywords, errors):
                         "date": item.get("fechaRecepcion"),
                         "deadline": deadline_raw or "",
                         "status": status,
-                        "matched_keywords": matched,
+                        # A standing call is a broad, always-relevant program (open to
+                        # any technical field) rather than a topic-specific match -
+                        # flagged separately so the dashboard can badge it distinctly.
+                        "kind": "standing" if standing_matched and not matched else "topic",
+                        "matched_keywords": matched or standing_matched,
                         "url": f"https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/{conv_id}",
                     })
     except requests.RequestException as e:
@@ -356,9 +366,10 @@ def send_email(new_items, errors):
 def main():
     DATA_DIR.mkdir(exist_ok=True)
     keywords = load_keywords()
+    standing_terms = load_standing_calls()
     errors = []
 
-    bdns_results = scan_bdns(keywords, errors)
+    bdns_results = scan_bdns(keywords, standing_terms, errors)
     eu_results = scan_eu(keywords, errors)
     all_results = bdns_results + eu_results
 
