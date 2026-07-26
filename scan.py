@@ -58,7 +58,6 @@ BDNS_DETAIL_URL = "https://www.infosubvenciones.es/bdnstrans/api/convocatorias"
 # bad request can never stall the whole workflow (which also has its own
 # job-level timeout-minutes cap in scan.yml as a second line of defense).
 REQUEST_TIMEOUT = (10, 20)
-BDNS_PAGES_TO_SCAN = 6  # 6 pages x 50 = most recent 300 convocatorias published across Spain
 BDNS_PAGE_SIZE = 50
 # Candidate field names for a BDNS convocatoria's actual application deadline.
 # The detail endpoint isn't formally documented, so we try each in order and
@@ -159,12 +158,30 @@ def compute_status(opens_raw, deadline_raw, today):
 def scan_bdns(keywords, standing_terms, errors):
     results = []
     today = datetime.now(timezone.utc).date()
-    try:
-        for page in range(BDNS_PAGES_TO_SCAN):
+    # Search from ~14 months back: BDNS's own filter narrows the volume
+    # server-side (rather than us scrolling and filtering client-side, which
+    # only ever saw the most-recent 300 records across ALL of Spain and
+    # missed anything published more than a few days ago). Anything older
+    # than ~14 months is essentially guaranteed closed anyway.
+    fecha_desde = (today - timedelta(days=420)).strftime("%d/%m/%Y")
+    detail_lookups_done = 0
+    # Hard cap on per-item detail lookups (each is a second HTTP request) so
+    # a broadly-matching term can't balloon into hundreds of slow requests
+    # and blow past the workflow's timeout - see the incident where a run
+    # hung for 19+ minutes before this cap and the (connect, read) timeout
+    # tuple were added.
+    max_detail_lookups = 25
+
+    all_terms = [(kw, "topic") for kw in keywords] + [(kw, "standing") for kw in standing_terms]
+
+    for term, kind in all_terms:
+        try:
             resp = requests.get(
                 BDNS_SEARCH_URL,
                 params={
-                    "page": page,
+                    "descripcion": term,
+                    "fechaDesde": fecha_desde,
+                    "page": 0,
                     "pageSize": BDNS_PAGE_SIZE,
                     "order": "fechaRecepcion",
                     "direccion": "desc",
@@ -176,41 +193,58 @@ def scan_bdns(keywords, standing_terms, errors):
             resp.raise_for_status()
             payload = resp.json()
             content = payload.get("content", [])
-            if not content:
-                break
             for item in content:
                 title = item.get("descripcion", "")
-                matched = text_matches(title, keywords)
-                standing_matched = text_matches(title, standing_terms)
-                if matched or standing_matched:
-                    conv_id = item.get("numeroConvocatoria") or item.get("id")
-                    vpd = item.get("vpd", "GE")
+                # BDNS's own search is literal (not semantic/fuzzy) per its
+                # documentation, but re-confirm client-side anyway - same
+                # standard the EU source is held to, cheap insurance against
+                # any edge case in how their search actually matches.
+                if not text_matches(title, [term]):
+                    continue
+
+                conv_id = item.get("numeroConvocatoria") or item.get("id")
+                vpd = item.get("vpd", "GE")
+
+                if detail_lookups_done >= max_detail_lookups:
+                    opens_raw, deadline_raw = None, None
+                else:
                     opens_raw, deadline_raw = fetch_bdns_deadline(conv_id, vpd, errors)
-                    status, is_closed = compute_status(opens_raw, deadline_raw, today)
-                    if is_closed:
-                        continue
-                    results.append({
-                        "source": "BDNS (Spain)",
-                        "id": f"bdns-{conv_id}",
-                        "title": title,
-                        "organism": " / ".join(filter(None, [
-                            item.get("nivel1"), item.get("nivel2"), item.get("nivel3")
-                        ])),
-                        "date": item.get("fechaRecepcion"),
-                        "deadline": deadline_raw or "",
-                        "status": status,
-                        # A standing call is a broad, always-relevant program (open to
-                        # any technical field) rather than a topic-specific match -
-                        # flagged separately so the dashboard can badge it distinctly.
-                        "kind": "standing" if standing_matched and not matched else "topic",
-                        "matched_keywords": matched or standing_matched,
-                        "url": f"https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/{conv_id}",
-                    })
-    except requests.RequestException as e:
-        errors.append(f"BDNS scan failed: {e}")
-    except (KeyError, ValueError) as e:
-        errors.append(f"BDNS response format unexpected: {e}")
-    return results
+                    detail_lookups_done += 1
+
+                status, is_closed = compute_status(opens_raw, deadline_raw, today)
+                if is_closed:
+                    continue
+
+                results.append({
+                    "source": "BDNS (Spain)",
+                    "id": f"bdns-{conv_id}",
+                    "title": title,
+                    "organism": " / ".join(filter(None, [
+                        item.get("nivel1"), item.get("nivel2"), item.get("nivel3")
+                    ])),
+                    "date": item.get("fechaRecepcion"),
+                    "deadline": deadline_raw or "",
+                    "status": status,
+                    # A standing call is a broad, always-relevant program (open to
+                    # any technical field) rather than a topic-specific match -
+                    # flagged separately so the dashboard can badge it distinctly.
+                    "kind": kind,
+                    "matched_keywords": [term],
+                    "url": f"https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/{conv_id}",
+                })
+        except requests.RequestException as e:
+            errors.append(f"BDNS scan failed for term '{term}': {e}")
+        except (KeyError, ValueError, TypeError) as e:
+            errors.append(f"BDNS response format unexpected for term '{term}': {e}")
+
+    # de-dupe: the same convocatoria can match more than one search term
+    dedup = {}
+    for r in results:
+        if r["id"] in dedup:
+            dedup[r["id"]]["matched_keywords"] = sorted(set(dedup[r["id"]]["matched_keywords"] + r["matched_keywords"]))
+        else:
+            dedup[r["id"]] = r
+    return list(dedup.values())
 
 
 # ---------------------------------------------------------------------------
