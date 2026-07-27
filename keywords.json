@@ -22,20 +22,29 @@
     "clean aviation",
     "era-net",
     "m-era.net",
+    "overleaf",
+    "caelestis",
+    "cryostar",
+    "tank2zero",
     "hytank",
     "hydrogen aircraft",
     "zero-emission aircraft",
     "crash certification hydrogen tank",
-    "digital twin", 
-     "artificial intelligence",
-     "digital twin",
-     "structures",
-     "composites"
+    "digital twin composite"
   ],
   "_comment_standing_calls": "Standing/general Spanish R&D funding instruments to always flag when they're published, regardless of technical topic - these are broad programs (any field can apply) rather than topic-specific calls, so they're matched separately against BDNS only and shown on the dashboard with a distinct 'standing call' badge.",
   "standing_calls": [
     "colaboración público-privada",
     "misiones ciencia e innovación",
-    "proyectos de i+d+i en líneas estratégicas"
+    "proyectos de i+d+i en líneas estratégicas",
+    "generación de conocimiento",
+    "prueba de concepto",
+    "equipamiento científico-técnico",
+    "colaboración internacional",
+    "cervera centros",
+    "convocatoria sera",
+    "innterconecta",
+    "sgr-cat",
+    "doctorats industrials"
   ]
 }
