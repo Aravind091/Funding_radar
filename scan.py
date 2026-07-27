@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Funding Radar
+AMADE Proposal Radar
 =============
 Scans two official, free public data sources for new open funding calls
 matching a keyword list, and alerts on anything new:
@@ -385,7 +385,7 @@ def send_email(new_items, errors):
 
     dashboard_url = os.environ.get("DASHBOARD_URL", "")
 
-    lines = [f"Funding Radar: {len(new_items)} new call(s) found this week.\n"]
+    lines = [f"AMADE Proposal Radar: {len(new_items)} new call(s) found.\n"]
     for it in new_items:
         detail = f" - {it['status']}" if it.get("status") else (f" - deadline {it['deadline']}" if it.get("deadline") else "")
         lines.append(f"- [{it['source']}] {it['title']}{detail}")
@@ -397,7 +397,7 @@ def send_email(new_items, errors):
     body = "\n".join(lines)
 
     msg = MIMEText(body, "plain", "utf-8")
-    msg["Subject"] = f"Funding Radar: {len(new_items)} new call(s) this week"
+    msg["Subject"] = f"AMADE Proposal Radar: {len(new_items)} new call(s)"
     msg["From"] = user
     msg["To"] = to
 
