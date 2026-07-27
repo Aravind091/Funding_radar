@@ -155,7 +155,18 @@ def compute_status(opens_raw, deadline_raw, today):
 # Source 1: BDNS (Spain, all administrations)
 # ---------------------------------------------------------------------------
 
-def scan_bdns(keywords, standing_terms, errors):
+def scan_bdns(standing_terms, errors):
+    """BDNS only checks the standing_calls watchlist, not the technical topic
+    keywords. Two reasons: BDNS titles are Spanish/Catalan/Basque/Galician,
+    so English tech terms essentially never appear verbatim (a rare "hit"
+    like a bare English word matching inside an unrelated Spanish/Catalan
+    word - e.g. "structures" hiding inside "infraestructures" - is a false
+    positive, not a real one). And more fundamentally: Spanish national/
+    regional calls are typically broad standing programs open to any field,
+    not narrow topic-specific calls the way EU Horizon topics are - so
+    tracking known program names is the right model here, not keyword
+    matching. EU keeps using the technical keyword list separately.
+    """
     results = []
     today = datetime.now(timezone.utc).date()
     # Search from ~14 months back: BDNS's own filter narrows the volume
@@ -172,7 +183,7 @@ def scan_bdns(keywords, standing_terms, errors):
     # tuple were added.
     max_detail_lookups = 25
 
-    all_terms = [(kw, "topic") for kw in keywords] + [(kw, "standing") for kw in standing_terms]
+    all_terms = [(kw, "standing") for kw in standing_terms]
 
     for term, kind in all_terms:
         try:
@@ -403,7 +414,7 @@ def main():
     standing_terms = load_standing_calls()
     errors = []
 
-    bdns_results = scan_bdns(keywords, standing_terms, errors)
+    bdns_results = scan_bdns(standing_terms, errors)
     eu_results = scan_eu(keywords, errors)
     all_results = bdns_results + eu_results
 
