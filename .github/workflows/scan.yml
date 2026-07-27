@@ -2,8 +2,8 @@ name: Funding Radar Scan
 
 on:
   schedule:
-    # 07:00 UTC every Monday (09:00 Girona in summer). Edit the cron to change frequency.
-    - cron: "0 7 * * 1"
+    # 07:00 UTC daily (09:00 Girona in summer). Edit the cron to change frequency.
+    - cron: "0 7 * * *"
   workflow_dispatch: {}  # lets you trigger a run manually from the Actions tab
 
 permissions:
