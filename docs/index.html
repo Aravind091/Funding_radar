@@ -79,7 +79,9 @@
     padding:10px 16px;
     min-width:140px;
   }
+  .stat.wide{min-width:200px;}
   .stat .n{font-size:22px;color:var(--accent);display:block;}
+  .stat .n.small{font-size:15px;white-space:nowrap;}
   .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
 
   .toolbar{
@@ -153,6 +155,11 @@
     font-size:10.5px;color:var(--accent);
     border:1px solid var(--accent-dim);
     border-radius:10px;padding:2px 9px;margin:0 6px 4px 0;
+  }
+  .via-note{
+    display:inline-block;
+    font-size:10.5px;color:var(--muted);font-style:italic;
+    margin:0 0 4px;
   }
 
   .empty{
@@ -245,6 +252,19 @@ function fmtDate(d){
   return dt.toISOString().slice(0,10);
 }
 
+function fmtDateTimeCET(d){
+  if(!d) return '—';
+  const dt = new Date(d);
+  if(isNaN(dt)) return d;
+  const formatted = dt.toLocaleString('en-GB', {
+    timeZone: 'Europe/Madrid',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit',
+    hour12: false
+  });
+  return formatted.replace(',', '') + ' (Madrid)';
+}
+
 function render(matches, filter, query){
   const container = document.getElementById('matches');
   const q = query.trim().toLowerCase();
@@ -269,7 +289,7 @@ function render(matches, filter, query){
       </div>
       <div class="title"><a href="${m.url}" target="_blank" rel="noopener">${m.title || '(untitled call)'}</a></div>
       <div class="organism">${m.organism || ''}</div>
-      <div class="kws">${(m.matched_keywords||[]).map(k => `<span class="kw">${k}</span>`).join('')}</div>
+      <div class="kws">${(m.matched_keywords||[]).map(k => `<span class="kw">${k}</span>`).join('')}${m.matched_via === 'description' ? '<span class="via-note">matched in description</span>' : ''}</div>
     </div>
   `).join('');
 }
@@ -279,11 +299,11 @@ function renderStats(matches, runLog){
   const stats = [
     {n: matches.length, l: 'Total matches'},
     {n: last ? last.new_matches : '—', l: 'New (last run)'},
-    {n: last ? fmtDate(last.timestamp) : '—', l: 'Last scan'},
+    {n: last ? fmtDateTimeCET(last.timestamp) : '—', l: 'Last scan', wide: true},
     {n: last && last.errors ? last.errors.length : 0, l: 'Warnings'},
   ];
   document.getElementById('statline').innerHTML = stats.map(s =>
-    `<div class="stat"><span class="n">${s.n}</span><span class="l">${s.l}</span></div>`
+    `<div class="stat${s.wide ? ' wide' : ''}"><span class="n${s.wide ? ' small' : ''}">${s.n}</span><span class="l">${s.l}</span></div>`
   ).join('');
 }
 
