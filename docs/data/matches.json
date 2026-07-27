@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "source": "BDNS (Spain)",
+    "id": "bdns-898201",
+    "title": "Convocatoria de contratos de personal investigador predoctoral en formación asociado a Proyectos de Generación de Conocimiento 2024.",
+    "organism": "OTROS / UNIVERSIDAD DE LAS PALMAS DE GRAN CANARIA",
+    "date": "2026-04-10",
+    "deadline": "",
+    "status": null,
+    "kind": "standing",
+    "matched_keywords": [
+      "generación de conocimiento"
+    ],
+    "url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/898201",
+    "found_at": "2026-07-27T06:34:43.305568+00:00"
+  },
+  {
+    "source": "BDNS (Spain)",
+    "id": "bdns-838250",
+    "title": "SEGUNDA CONVOCATORIA DE AYUDAS PARA LA FORMACIÓN DE PERSONAL INVESTIGADOR PREDOCTORAL 2024 VINCULADAS AL PROCEDIMIENTO DE CONCESIÓN DE AYUDAS A PROYECTOS DE GENERACIÓN DE CONOCIMIENTO 2023 (PID2023) (código de línea de subvención 04-541-4-2024-0010-S)",
+    "organism": "OTROS / UNIVERSIDAD MIGUEL HERNÁNDEZ DE ELCHE",
+    "date": "2025-06-06",
+    "deadline": "",
+    "status": null,
+    "kind": "standing",
+    "matched_keywords": [
+      "generación de conocimiento"
+    ],
+    "url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/838250",
+    "found_at": "2026-07-27T06:34:43.305568+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-HORIZON-JU-CLEAN-AVIATION-2026-04-FTA-07",
+    "title": "Innovative light weight and reliable liquid hydrogen tank",
+    "organism": [
+      "43108390"
+    ],
+    "date": "2026-05-12T10:42:58.976+0000",
+    "deadline": "",
+    "status": null,
+    "matched_keywords": [
+      "hydrogen tank"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/horizon-ju-clean-aviation-2026-04-fta-07",
+    "found_at": "2026-07-27T06:34:43.305568+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-31045243900014",
+    "title": "Fracture mechanics testing of irradiated RPV steels by means of sub-sized specimens (FRACTESUS)",
+    "organism": "EU",
+    "date": "",
+    "deadline": "",
+    "status": null,
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/31045243900014",
+    "found_at": "2026-07-27T06:34:43.305568+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568sl",
+    "title": "Advanced Quantized FRActure MEchanics models of ice and snow for GLObal Warming risk mitigation",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568sl",
+    "found_at": "2026-07-27T06:34:43.305568+00:00"
+  }
+]
