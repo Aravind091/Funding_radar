@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "timestamp": "2026-07-27T07:03:19.447866+00:00",
+    "new_matches": 5,
+    "total_scanned": 5,
+    "errors": [
+      "EU description lookup failed for 44414: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/44414en?apiKey=SEDIA",
+      "EU description lookup failed for 877680251: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/877680251en?apiKey=SEDIA",
+      "EU description lookup failed for 31333: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/31333en?apiKey=SEDIA",
+      "EU description lookup failed for 868719779: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/868719779en?apiKey=SEDIA",
+      "EU description lookup failed for 44414: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/44414en?apiKey=SEDIA",
+      "EU description lookup failed for 868833366: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/868833366en?apiKey=SEDIA",
+      "EU description lookup failed for 965658475: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/965658475en?apiKey=SEDIA",
+      "EU description lookup failed for 891620412: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/891620412en?apiKey=SEDIA",
+      "EU description lookup failed for 890688727: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/890688727en?apiKey=SEDIA",
+      "EU description lookup failed for 925193858: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/925193858en?apiKey=SEDIA",
+      "EU description lookup failed for 922338566: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/922338566en?apiKey=SEDIA",
+      "EU description lookup failed for b189b35a-3b4b-4b45-8f5a-33d3fd4b6b18-EXA: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/b189b35a-3b4b-4b45-8f5a-33d3fd4b6b18-EXAen?apiKey=SEDIA",
+      "EU description lookup failed for 7319ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/7319ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 6771ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/6771ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 10594ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/10594ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 5897ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/5897ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 9560ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/9560ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 15972ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/15972ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 6407ANNOUNCEMENTen: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/6407ANNOUNCEMENTenen?apiKey=SEDIA",
+      "EU description lookup failed for 30290da: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/30290daen?apiKey=SEDIA",
+      "EU description lookup failed for 30290sv: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/30290sven?apiKey=SEDIA",
+      "EU description lookup failed for HORIZON-JTI-CLEANH2-2023-02-03: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/HORIZON-JTI-CLEANH2-2023-02-03en?apiKey=SEDIA",
+      "EU description lookup failed for GOVERNANCE-23-2020: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/GOVERNANCE-23-2020en?apiKey=SEDIA",
+      "EU description lookup failed for JTI-CS2-2015-CFP02-FRC-02-12: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/JTI-CS2-2015-CFP02-FRC-02-12en?apiKey=SEDIA",
+      "EU description lookup failed for FCH-01-3-2017: 400 Client Error:  for url: https://api.tech.ec.europa.eu/search-api/prod/rest/document/FCH-01-3-2017en?apiKey=SEDIA"
+    ]
+  }
+]
