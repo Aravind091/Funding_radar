@@ -49,7 +49,6 @@ KEYWORDS_FILE = ROOT / "keywords.json"
 
 BDNS_SEARCH_URL = "https://www.infosubvenciones.es/bdnstrans/api/convocatorias/busqueda"
 EU_SEARCH_URL = "https://api.tech.ec.europa.eu/search-api/prod/rest/search"
-EU_DOCUMENT_URL = "https://api.tech.ec.europa.eu/search-api/prod/rest/document"
 
 BDNS_DETAIL_URL = "https://www.infosubvenciones.es/bdnstrans/api/convocatorias"
 
@@ -93,46 +92,6 @@ def save_json(path, obj):
 def text_matches(text, keywords):
     text_l = (text or "").lower()
     return [kw for kw in keywords if kw in text_l]
-
-
-def _flatten_text(obj, out):
-    """Collect every string value in an arbitrary JSON structure into a flat
-    list, so we can search a whole document response without needing to know
-    its exact field names in advance (the SEDIA document endpoint isn't
-    formally documented, same situation as BDNS's detail endpoint)."""
-    if isinstance(obj, str):
-        out.append(obj)
-    elif isinstance(obj, list):
-        for v in obj:
-            _flatten_text(v, out)
-    elif isinstance(obj, dict):
-        for v in obj.values():
-            _flatten_text(v, out)
-
-
-def fetch_eu_description(topic_id, errors):
-    """Fetch the full document record for an EU topic and return all its text
-    concatenated, so a keyword can be checked against the actual call
-    description/objective - not just the title. Best-effort: on any failure,
-    returns "" and the caller just treats it as no additional match found.
-    """
-    try:
-        resp = requests.get(
-            f"{EU_DOCUMENT_URL}/{topic_id}en",
-            params={"apiKey": "SEDIA"},
-            timeout=REQUEST_TIMEOUT,
-            headers={"Accept": "application/json"},
-        )
-        resp.raise_for_status()
-        data = resp.json()
-        parts = []
-        _flatten_text(data, parts)
-        return " ".join(parts)
-    except requests.RequestException as e:
-        errors.append(f"EU description lookup failed for {topic_id}: {e}")
-    except (ValueError, AttributeError):
-        pass
-    return ""
 
 
 def fetch_bdns_deadline(conv_id, vpd, errors):
@@ -306,11 +265,6 @@ def scan_bdns(standing_terms, errors):
 def scan_eu(keywords, errors):
     results = []
     today = datetime.now(timezone.utc).date()
-    detail_lookups_done = 0
-    # Same protective cap used for BDNS detail lookups - fetching a full
-    # document is a second HTTP request per candidate, so bound it to avoid
-    # ballooning into a slow run if many candidates fail the title check.
-    max_detail_lookups = 25
 
     for kw in keywords:
         try:
@@ -349,22 +303,19 @@ def scan_eu(keywords, errors):
 
                 # The EU search API ranks results by its own relevance scoring, which
                 # is loose enough to surface unrelated hits (e.g. a "tank" keyword
-                # pulling in "anti-tank capabilities" or "Think Tanks"). Require the
-                # keyword to genuinely appear in the title first (cheap, no extra
-                # request); if it doesn't, fall back to checking the call's full
-                # description/objective text (one extra request, bounded by the cap
-                # above) before giving up - titles are often coded/generic while the
-                # actual technical relevance lives in the body text.
+                # pulling in "anti-tank capabilities" or "Think Tanks"). Only keep a
+                # result if the keyword genuinely appears in the title - same standard
+                # BDNS is held to.
+                #
+                # NOTE: a full-description fallback (checking the call's body text,
+                # not just the title, via what looked like a per-document detail
+                # endpoint) was attempted here and reverted - every lookup failed
+                # with 400 Client Error and no verified working example of that
+                # endpoint could be found. Title-only matching is what's confirmed
+                # to work reliably.
                 matched_via = "title"
                 if not text_matches(title, [kw]):
-                    if topic_id and detail_lookups_done < max_detail_lookups:
-                        detail_lookups_done += 1
-                        full_text = fetch_eu_description(topic_id, errors)
-                        if not text_matches(full_text, [kw]):
-                            continue
-                        matched_via = "description"
-                    else:
-                        continue
+                    continue
 
                 # Best-effort recency filter: if a deadline is present and clearly in
                 # the past, skip it. Historical/archived topics often don't carry
