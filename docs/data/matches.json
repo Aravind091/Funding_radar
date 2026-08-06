@@ -1,5 +1,20 @@
 [
   {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568ga",
+    "title": "Advanced Quantized FRActure MEchanics models of ice and snow for GLObal Warming risk mitigation",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568ga",
+    "found_at": "2026-08-06T09:45:46.858144+00:00"
+  },
+  {
     "source": "BDNS (Spain)",
     "id": "bdns-898201",
     "title": "Convocatoria de contratos de personal investigador predoctoral en formación asociado a Proyectos de Generación de Conocimiento 2024.",
