@@ -1,5 +1,20 @@
 [
   {
+    "source": "BDNS (Spain)",
+    "id": "bdns-924673",
+    "title": "Convocatoria instrumental Ellas+ Etiopía 2026 Fortalecimiento del movimiento feminista etíope para la generación de conocimiento y la defensa de los derechos de las mujeres",
+    "organism": "ESTADO / MINISTERIO DE ASUNTOS EXTERIORES, UNIÓN EUROPEA Y COOPERACIÓN / AGENCIA ESTATAL AGENCIA ESPAÑOLA DE COOPERACIÓN INTERNACIONAL PARA EL DESARROLLO",
+    "date": "2026-08-12",
+    "deadline": "2026-12-31",
+    "status": "Open until 2026-12-31",
+    "kind": "standing",
+    "matched_keywords": [
+      "generación de conocimiento"
+    ],
+    "url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/924673",
+    "found_at": "2026-08-13T08:27:41.330640+00:00"
+  },
+  {
     "source": "EU Funding & Tenders",
     "id": "eu-43108390101201568mt",
     "title": "Advanced Quantized FRActure MEchanics models of ice and snow for GLObal Warming risk mitigation",
