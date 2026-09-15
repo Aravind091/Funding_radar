@@ -1,5 +1,20 @@
 [
   {
+    "source": "EU Funding & Tenders",
+    "id": "eu-358398ANNOUNCEMENTen",
+    "title": "Innovative light weight and reliable liquid hydrogen tank",
+    "organism": "EU",
+    "date": "",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "hydrogen tank"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/358398announcementen",
+    "found_at": "2026-09-15T12:37:10.425025+00:00"
+  },
+  {
     "source": "BDNS (Spain)",
     "id": "bdns-924673",
     "title": "Convocatoria instrumental Ellas+ Etiopía 2026 Fortalecimiento del movimiento feminista etíope para la generación de conocimiento y la defensa de los derechos de las mujeres",
