@@ -1,5 +1,125 @@
 [
   {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568sv",
+    "title": "Avancerade Kvantiserade FRActure MEchanics modeller av is och snö för GLObal Warming riskreducering",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568sv",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568nl",
+    "title": "Geavanceerde Quantized FRActure MEchanics modellen van ijs en sneeuw voor GLObal Warming risicobeperking",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568nl",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568fi",
+    "title": "Jään ja lumen kehittyneet kvantifioidut FRActure MEchanics -mallit GLObal Warming -riskin lieventämiseen",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568fi",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568de",
+    "title": "Advanced Quantized FRActure Mechanics Modelle von Eis und Schnee für GLObal Warming Risikominderung",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568de",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568da",
+    "title": "Avanceret Quantized FRActure MEchanics modeller af is og sne til GLObal Opvarmning risikoreduktion",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568da",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568hu",
+    "title": "Korszerű kvantált FRActure MEchanics modellek jégből és hóból a GLObal melegedési kockázat csökkentésére",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568hu",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568cs",
+    "title": "Advanced Quantized FRActure MEchanics modely ledu a sněhu pro zmírnění rizika globálního oteplování",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568cs",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43108390101201568sk",
+    "title": "Pokročilé kvantové modely FRActure MEchanics ľadu a snehu na zmiernenie rizika globálneho otepľovania",
+    "organism": "EU",
+    "date": "2025-11-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "fracture mechanics"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43108390101201568sk",
+    "found_at": "2026-09-27T12:55:58.762225+00:00"
+  },
+  {
     "source": "BDNS (Spain)",
     "id": "bdns-918682",
     "title": "Resolución de 22 de septiembre de 2026 de la Presidencia de la Agencia Estatal de Investigación, por la que se aprueba el segundo procedimiento de concesión directa de ayudas del año 2026 a proyectos de colaboración internacional.",
