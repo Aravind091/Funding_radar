@@ -1,6 +1,21 @@
 [
   {
     "source": "EU Funding & Tenders",
+    "id": "eu-92802en",
+    "title": "Multi-material Carbon-Fiber Reinforced Polymer and Aluminum (CFRP-AL) Finite Element Analysis (FEA) modelling",
+    "organism": "EU",
+    "date": "",
+    "deadline": "",
+    "status": null,
+    "matched_via": "title",
+    "matched_keywords": [
+      "cfrp"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/92802en",
+    "found_at": "2026-09-30T13:34:06.250708+00:00"
+  },
+  {
+    "source": "EU Funding & Tenders",
     "id": "eu-43108390101201568sv",
     "title": "Avancerade Kvantiserade FRActure MEchanics modeller av is och snö för GLObal Warming riskreducering",
     "organism": "EU",
