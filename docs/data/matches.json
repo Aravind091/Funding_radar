@@ -1,5 +1,20 @@
 [
   {
+    "source": "BDNS (Spain)",
+    "id": "bdns-918664",
+    "title": "Resolución de 30 de septiembre de 2026 de la Presidencia de la Agencia Estatal de Investigación que aprueba la convocatoria 2026 de ayudas a Proyectos de Generación de Conocimiento y actuaciones para formación de personal investigador predoctoral.",
+    "organism": "ESTADO / MINISTERIO DE CIENCIA, INNOVACIÓN Y UNIVERSIDADES / AGENCIA ESTATAL DE INVESTIGACIÓN",
+    "date": "2026-07-10",
+    "deadline": "2026-11-24",
+    "status": "Opens 2026-11-03",
+    "kind": "standing",
+    "matched_keywords": [
+      "generación de conocimiento"
+    ],
+    "url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/918664",
+    "found_at": "2026-10-01T14:23:58.002017+00:00"
+  },
+  {
     "source": "EU Funding & Tenders",
     "id": "eu-92802en",
     "title": "Multi-material Carbon-Fiber Reinforced Polymer and Aluminum (CFRP-AL) Finite Element Analysis (FEA) modelling",
