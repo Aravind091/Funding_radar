@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-10-10T13:31:19.753326+00:00",
+    "new_matches": 0,
+    "total_scanned": 14,
+    "errors": []
+  },
+  {
     "timestamp": "2026-10-09T14:18:35.590686+00:00",
     "new_matches": 0,
     "total_scanned": 14,
