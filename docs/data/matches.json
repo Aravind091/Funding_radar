@@ -1,6 +1,21 @@
 [
   {
     "source": "BDNS (Spain)",
+    "id": "bdns-942011",
+    "title": "Convenio de colaboración entre la Consellería de Educación, Ciencia, Universidades y Formación Profesional y la UDC para la dotación de equipamiento  en innovación educativa y la adquisición y el uso compartido de equipamiento científico-técnico, año 2026",
+    "organism": "AUTONOMICA / GALICIA / CONSELLERÍA DE EDUCACIÓN, CIENCIA, UNIVERSIDADES E FORMACIÓN PROFESIONAL",
+    "date": "2026-11-13",
+    "deadline": "2026-12-31",
+    "status": "Open until 2026-12-31",
+    "kind": "standing",
+    "matched_keywords": [
+      "equipamiento científico-técnico"
+    ],
+    "url": "https://www.infosubvenciones.es/bdnstrans/GE/es/convocatoria/942011",
+    "found_at": "2026-11-14T14:03:14.742581+00:00"
+  },
+  {
+    "source": "BDNS (Spain)",
     "id": "bdns-941239",
     "title": "Resolución de 6 de noviembre de 2026 de la Presidencia del CDTI E.P.E. por la que se aprueba la convocatoria para el año 2026 del procedimiento de concesión de ayudas destinadas a proyectos INNTERCONECTA-STEP, cofinanciada por FEDER",
     "organism": "",

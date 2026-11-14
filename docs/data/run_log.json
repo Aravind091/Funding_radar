@@ -1,5 +1,11 @@
 [
   {
+    "timestamp": "2026-11-14T14:03:14.742581+00:00",
+    "new_matches": 1,
+    "total_scanned": 17,
+    "errors": []
+  },
+  {
     "timestamp": "2026-11-13T15:17:09.496723+00:00",
     "new_matches": 0,
     "total_scanned": 16,
@@ -633,12 +639,6 @@
   {
     "timestamp": "2026-08-07T08:20:00.787975+00:00",
     "new_matches": 0,
-    "total_scanned": 4,
-    "errors": []
-  },
-  {
-    "timestamp": "2026-08-06T09:45:46.858144+00:00",
-    "new_matches": 1,
     "total_scanned": 4,
     "errors": []
   }
