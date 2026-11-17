@@ -1,5 +1,20 @@
 [
   {
+    "source": "EU Funding & Tenders",
+    "id": "eu-43089234101326781mt",
+    "title": "Gen2 - Green Liquid Hydrogen Production",
+    "organism": "EU",
+    "date": "2026-12-01T00:00:00.000+0100",
+    "deadline": "",
+    "status": "Opens 2026-12-01",
+    "matched_via": "title",
+    "matched_keywords": [
+      "liquid hydrogen"
+    ],
+    "url": "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/topic-details/43089234101326781mt",
+    "found_at": "2026-11-17T16:49:34.768935+00:00"
+  },
+  {
     "source": "BDNS (Spain)",
     "id": "bdns-942011",
     "title": "Convenio de colaboración entre la Consellería de Educación, Ciencia, Universidades y Formación Profesional y la UDC para la dotación de equipamiento  en innovación educativa y la adquisición y el uso compartido de equipamiento científico-técnico, año 2026",
